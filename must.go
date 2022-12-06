@@ -1,6 +1,6 @@
 package must
 
-func Must0(err error)  {
+func Must0(err error) {
 	fatal(err)
 }
 
@@ -28,4 +28,3 @@ func Must5[T1 any, T2 any, T3 any, T4 any, T5 any](v1 T1, v2 T2, v3 T3, v4 T4, v
 	fatal(err)
 	return v1, v2, v3, v4, v5
 }
-

@@ -1,8 +1,8 @@
 package must
 
-{{ range $i := IntRange 0 .Max }}
+{{- range $i := IntRange 0 .Max }}
 
-{{- /* Function name*/ -}}
+{{/* Function name*/ -}}
 func Must{{- $i -}}
 
 {{- /* Type parameters */ -}}
@@ -26,12 +26,14 @@ func Must{{- $i -}}
 )
 
 {{- /* Return types */ -}}
-{{- if gt $i 1}} ( {{- else }} {{ end -}}
-{{ range $j := IntRange 1 $i -}}
-	T{{ $j }}
-	{{- if ne $j $i }}, {{ end -}} 
-{{ end -}}
-{{- if gt $i 1 -}} ) {{ else }} {{ end }}
+{{- if gt $i 0 -}}
+	{{- if gt $i 1 }} ( {{- else }} {{ end -}}
+	{{ range $j := IntRange 1 $i -}}
+		T{{ $j }}
+		{{- if ne $j $i }}, {{ end -}} 
+	{{ end -}}
+	{{- if gt $i 1 -}} ) {{ else }} {{ end }}
+{{- else }} {{ end -}}
 
 {{- /* Function body */ -}}
 {
@@ -44,5 +46,4 @@ func Must{{- $i -}}
 	{{- end -}}
 	{{- end }}
 }
-
-{{ end }}
+{{- end }}
