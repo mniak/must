@@ -1,7 +1,8 @@
 package must
 
 import (
-	"log"
+	"fmt"
+	"os"
 )
 
 var fatal func(err error) = DefaultFatal
@@ -16,6 +17,7 @@ func ResetFatalFunc() {
 
 func DefaultFatal(err error) {
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(-1)
 	}
 }
