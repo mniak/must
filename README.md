@@ -33,7 +33,7 @@ I caught myself many times implementing `handleError` functions for command line
 Usage
 -----
 
-There are functions named `MustX` where `X` is the number of arguments except the error argument.
+There are functions named `DoX` where `X` is the number of arguments except the error argument.
 
 If the error is not nil, the _fatal_ function will be called.
 The default function is `DefaultFatal` but you can set it using `SetFatalFunc`.
