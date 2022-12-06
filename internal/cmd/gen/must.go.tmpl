@@ -3,14 +3,14 @@ package must
 {{- range $i := IntRange 0 .Max }}
 
 {{/* Function name*/ -}}
-func Do{{- $i -}}
+func {{ $.BaseName }}{{- $i -}}
 
 {{- /* Type parameters */ -}}
 {{- if gt $i 0 -}}
 	[
 		{{- range $j := IntRange 1 $i -}}
 			T{{ $j }} any
-			{{- if ne $j $i }}, {{ end -}}
+			{{- template "CommaWithSpace" (ne $j $i) }}
 		{{- end -}}
 	]
 {{- end -}}
@@ -19,7 +19,7 @@ func Do{{- $i -}}
 (
 	{{- range $j := IntRange 1 $i -}}
 		v{{ $j }} T{{ $j -}}
-		, {{/* space */ -}}
+		{{- template "CommaWithSpace" true }}
 	{{- end -}}
 	err error
 {{- /* End of parameter list */ -}}
@@ -30,7 +30,7 @@ func Do{{- $i -}}
 	{{- if gt $i 1 }} ( {{- else }} {{ end -}}
 	{{ range $j := IntRange 1 $i -}}
 		T{{ $j }}
-		{{- if ne $j $i }}, {{ end -}} 
+		{{- template "CommaWithSpace" (ne $j $i) -}}
 	{{ end -}}
 	{{- if gt $i 1 -}} ) {{ else }} {{ end }}
 {{- else }} {{ end -}}
@@ -42,7 +42,7 @@ func Do{{- $i -}}
 	{{/* Return statement */}}
 	return {{ range $j := IntRange 1 $i -}}
 		v{{ $j -}}
-		{{ if ne $j $i }}, {{ end }}
+		{{- template "CommaWithSpace" (ne $j $i) }}
 	{{- end -}}
 	{{- end }}
 }

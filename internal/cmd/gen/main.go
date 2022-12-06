@@ -10,6 +10,8 @@ import (
 //go:embed *.tmpl
 var embedFS embed.FS
 
+const BaseName = "Do"
+
 func main() {
 	if len(os.Args) < 2 {
 		printUsage()
@@ -39,14 +41,14 @@ func main() {
 	handle(err)
 	defer fmust.Close()
 
-	handle(tmpl.ExecuteTemplate(fmust, "must.go.tmpl", map[string]any{
-		"Max": max,
-	}))
+	data := map[string]any{
+		"Max":      max,
+		"BaseName": BaseName,
+	}
+	handle(tmpl.ExecuteTemplate(fmust, "must.go.tmpl", data))
 
-	fmusttest, err := os.Create("must_test.go")
-	handle(err)
-	defer fmust.Close()
-	handle(tmpl.ExecuteTemplate(fmusttest, "must_test.go.tmpl", map[string]any{
-		"Max": max,
-	}))
+	// fmusttest, err := os.Create("must_test.go")
+	// handle(err)
+	// defer fmust.Close()
+	// handle(tmpl.ExecuteTemplate(fmusttest, "must_test.go.tmpl", data))
 }
