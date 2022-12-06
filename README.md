@@ -12,7 +12,13 @@ go get github.com/mniak/must
 
 ### Import
 ```go
-github.com/mniak/must
+import "github.com/mniak/must"
+```
+or 
+```go
+import (
+    "github.com/mniak/must"
+)
 ```
 
 Motivation
