@@ -37,7 +37,7 @@ func {{ $.BaseName }}{{- $i -}}
 
 {{- /* Function body */ -}}
 {
-	fatal(err)
+	{{ template "ConditionalFatal" }}
 	{{- if gt $i 0 -}}
 	{{/* Return statement */}}
 	return {{ range $j := IntRange 1 $i -}}
