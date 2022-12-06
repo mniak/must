@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"os"
 	"strconv"
 	"text/template"
@@ -33,6 +34,9 @@ func main() {
 				}
 				return result
 			},
+			"FuncName": func(i int) string {
+				return fmt.Sprintf("%s%d", BaseName, i)
+			},
 		}).
 		ParseFS(embedFS, "*.tmpl")
 	handle(err)
@@ -47,8 +51,8 @@ func main() {
 	}
 	handle(tmpl.ExecuteTemplate(fmust, "must.go.tmpl", data))
 
-	// fmusttest, err := os.Create("must_test.go")
-	// handle(err)
-	// defer fmust.Close()
-	// handle(tmpl.ExecuteTemplate(fmusttest, "must_test.go.tmpl", data))
+	fmusttest, err := os.Create("must_test.go")
+	handle(err)
+	defer fmust.Close()
+	handle(tmpl.ExecuteTemplate(fmusttest, "must_test.go.tmpl", data))
 }

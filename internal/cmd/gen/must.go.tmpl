@@ -3,7 +3,7 @@ package must
 {{- range $i := IntRange 0 .Max }}
 
 {{/* Function name*/ -}}
-func {{ $.BaseName }}{{- $i -}}
+func {{ FuncName $i }}
 
 {{- /* Type parameters */ -}}
 {{- if gt $i 0 -}}
