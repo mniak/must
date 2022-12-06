@@ -7,7 +7,6 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/stretchr/testify/assert"
 )
-
 {{ define "MockFatal" -}}
 		var fatalCount int
 		var fatalErr error
@@ -16,29 +15,56 @@ import (
 			fatalErr = err
 		})
 {{- end -}}
-{{ define "CallNonFatal" -}}
-		{{/* Variable attribution */ -}}
-		{{ range $j := IntRange 1 . }}
+{{ define "FakeValuesDeclaration" -}}
+		{{ range $n := IntRange 1 $ -}}
+			fakeValue{{ $n }} := gofakeit.SentenceSimple()
 		{{ end -}}
-		{{ FuncName . }}(nil)
+{{- end -}}
+{{ define "ValuesAttribution" -}}
+		{{ range $n := IntRange 1 $ -}}
+			value{{ $n }}
+			{{- template "CommaWithSpace" (ne $n $) }}
+		{{- end }}
+		{{- if gt $ 0 }} := {{ end -}}
+{{- end -}}
+{{ define "AssertValues" -}}
+		{{ range $n := IntRange 1 $ }}
+		assert.Equal(t, fakeValue{{ $n }}, value{{ $n }})
+		{{- end }}
+{{- end -}}
+{{ define "CallNonFatal" -}}
+		{{ template "FakeValuesDeclaration" $ -}}
+		{{ template "ValuesAttribution" $ -}}
+		{{ FuncName $ }}(
+		{{- range $n := IntRange 1 $ -}}
+			fakeValue{{ $n }}
+			{{- template "CommaWithSpace" true }}
+		{{- end -}}
+		nil)
 {{- end -}}
 {{ define "AssertNonFatal" -}}
 		assert.Zero(t, fatalCount, "fatal must have never been called")
 		assert.Nil(t, fatalErr)
+		{{- template "AssertValues" $ }}
 {{- end -}}
 {{ define "CallFatal" -}}
+		{{ template "FakeValuesDeclaration" $ -}}
 		fakeErr := errors.New(gofakeit.SentenceSimple())
-		{{/* Variable attribution */ -}}
-		{{ range $j := IntRange 1 . }}
-		{{ end -}}
-		Do0(fakeErr)
+		{{ template "ValuesAttribution" $ -}}
+		{{ FuncName $ }}(
+		{{- range $n := IntRange 1 $ -}}
+			fakeValue{{ $n }}
+			{{- template "CommaWithSpace" true }}
+		{{- end -}}
+		fakeErr)
 {{- end -}}
 {{ define "AssertFatal" -}}
 		assert.Equal(t, 1, fatalCount, "fatal must have called the fatal func exactly once")
 		assert.Equal(t, fakeErr, fatalErr)
+		{{- template "AssertValues" $}}
 {{- end -}}
 
-{{ range $i := IntRange 0 .Max -}}
+{{ range $i := IntRange 0 .Max }}
 func Test{{ FuncName $i }}(t *testing.T) {
 	t.Run("When does not have error", func(t *testing.T) {
 		{{ template "MockFatal" $i }}
@@ -56,5 +82,4 @@ func Test{{ FuncName $i }}(t *testing.T) {
 		{{ template "AssertFatal" $i }}
 	})
 }
-
-{{ end}}
+{{ end }}
