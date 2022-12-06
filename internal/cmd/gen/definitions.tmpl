@@ -1,0 +1,10 @@
+{{ define "CommaWithSpace" -}}
+	{{ if . }}, {{ end }}
+{{- end }}
+
+
+{{ define "ConditionalFatal" -}} 
+	if err != nil {
+		fatal(err)
+	}
+{{- end }}

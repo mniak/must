@@ -1,0 +1,49 @@
+package must
+
+{{- range $i := IntRange 0 .Max }}
+
+{{/* Function name*/ -}}
+func {{ FuncName $i }}
+
+{{- /* Type parameters */ -}}
+{{- if gt $i 0 -}}
+	[
+		{{- range $j := IntRange 1 $i -}}
+			T{{ $j }} any
+			{{- template "CommaWithSpace" (ne $j $i) }}
+		{{- end -}}
+	]
+{{- end -}}
+
+{{- /* Parameter list */ -}}
+(
+	{{- range $j := IntRange 1 $i -}}
+		v{{ $j }} T{{ $j -}}
+		{{- template "CommaWithSpace" true }}
+	{{- end -}}
+	err error
+{{- /* End of parameter list */ -}}
+)
+
+{{- /* Return types */ -}}
+{{- if gt $i 0 -}}
+	{{- if gt $i 1 }} ( {{- else }} {{ end -}}
+	{{ range $j := IntRange 1 $i -}}
+		T{{ $j }}
+		{{- template "CommaWithSpace" (ne $j $i) -}}
+	{{ end -}}
+	{{- if gt $i 1 -}} ) {{ else }} {{ end }}
+{{- else }} {{ end -}}
+
+{{- /* Function body */ -}}
+{
+	{{ template "ConditionalFatal" }}
+	{{- if gt $i 0 -}}
+	{{/* Return statement */}}
+	return {{ range $j := IntRange 1 $i -}}
+		v{{ $j -}}
+		{{- template "CommaWithSpace" (ne $j $i) }}
+	{{- end -}}
+	{{- end }}
+}
+{{- end }}
