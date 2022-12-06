@@ -1,0 +1,48 @@
+package must
+
+{{ range $i := IntRange 0 .Max }}
+
+{{- /* Function name*/ -}}
+func Must{{- $i -}}
+
+{{- /* Type parameters */ -}}
+{{- if gt $i 0 -}}
+	[
+		{{- range $j := IntRange 1 $i -}}
+			T{{ $j }} any
+			{{- if ne $j $i }}, {{ end -}}
+		{{- end -}}
+	]
+{{- end -}}
+
+{{- /* Parameter list */ -}}
+(
+	{{- range $j := IntRange 1 $i -}}
+		v{{ $j }} T{{ $j -}}
+		, {{/* space */ -}}
+	{{- end -}}
+	err error
+{{- /* End of parameter list */ -}}
+)
+
+{{- /* Return types */ -}}
+{{- if gt $i 1}} ( {{- else }} {{ end -}}
+{{ range $j := IntRange 1 $i -}}
+	T{{ $j }}
+	{{- if ne $j $i }}, {{ end -}} 
+{{ end -}}
+{{- if gt $i 1 -}} ) {{ else }} {{ end }}
+
+{{- /* Function body */ -}}
+{
+	fatal(err)
+	{{- if gt $i 0 -}}
+	{{/* Return statement */}}
+	return {{ range $j := IntRange 1 $i -}}
+		v{{ $j -}}
+		{{ if ne $j $i }}, {{ end }}
+	{{- end -}}
+	{{- end }}
+}
+
+{{ end }}
