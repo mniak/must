@@ -42,4 +42,11 @@ func main() {
 	handle(tmpl.ExecuteTemplate(fmust, "must.go.tmpl", map[string]any{
 		"Max": max,
 	}))
+
+	fmusttest, err := os.Create("must_test.go")
+	handle(err)
+	defer fmust.Close()
+	handle(tmpl.ExecuteTemplate(fmusttest, "must_test.go.tmpl", map[string]any{
+		"Max": max,
+	}))
 }
