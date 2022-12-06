@@ -38,3 +38,74 @@ func TestDo0(t *testing.T) {
 		assert.Equal(t, fakeErr, fatalErr)
 	})
 }
+
+func TestDo1(t *testing.T) {
+	t.Run("String", func(t *testing.T) {
+		t.Run("When does not have error", func(t *testing.T) {
+			var fatalCount int
+			var fatalErr error
+			SetFatalFunc(func(err error) {
+				fatalCount++
+				fatalErr = err
+			})
+
+			fakeValue1 := gofakeit.SentenceSimple()
+			value1 := Do1(fakeValue1, nil)
+
+			assert.Zero(t, fatalCount, "fatal must have never been called")
+			assert.Nil(t, fatalErr)
+			assert.Equal(t, fakeValue1, value1)
+		})
+
+		t.Run("When has error", func(t *testing.T) {
+			var fatalCount int
+			var fatalErr error
+			SetFatalFunc(func(err error) {
+				fatalCount++
+				fatalErr = err
+			})
+
+			fakeValue1 := gofakeit.SentenceSimple()
+			fakeErr := errors.New(gofakeit.SentenceSimple())
+			value1 := Do1(fakeValue1, fakeErr)
+
+			assert.Equal(t, 1, fatalCount, "fatal must have called the fatal func exactly once")
+			assert.Equal(t, fakeErr, fatalErr)
+			assert.Equal(t, fakeValue1, value1)
+		})
+	})
+	t.Run("Int", func(t *testing.T) {
+		t.Run("When does not have error", func(t *testing.T) {
+			var fatalCount int
+			var fatalErr error
+			SetFatalFunc(func(err error) {
+				fatalCount++
+				fatalErr = err
+			})
+
+			fakeValue1 := int(gofakeit.Uint16())
+			value1 := Do1(fakeValue1, nil)
+
+			assert.Zero(t, fatalCount, "fatal must have never been called")
+			assert.Nil(t, fatalErr)
+			assert.Equal(t, fakeValue1, value1)
+		})
+
+		t.Run("When has error", func(t *testing.T) {
+			var fatalCount int
+			var fatalErr error
+			SetFatalFunc(func(err error) {
+				fatalCount++
+				fatalErr = err
+			})
+
+			fakeValue1 := int(gofakeit.Uint16())
+			fakeErr := errors.New(gofakeit.SentenceSimple())
+			value1 := Do1(fakeValue1, fakeErr)
+
+			assert.Equal(t, 1, fatalCount, "fatal must have called the fatal func exactly once")
+			assert.Equal(t, fakeErr, fatalErr)
+			assert.Equal(t, fakeValue1, value1)
+		})
+	})
+}
