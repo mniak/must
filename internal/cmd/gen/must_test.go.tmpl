@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-{{- define "MockFatal" -}}
+{{ define "MockFatal" -}}
 		var fatalCount int
 		var fatalErr error
 		SetFatalFunc(func(err error) {
@@ -38,8 +38,7 @@ import (
 		assert.Equal(t, fakeErr, fatalErr)
 {{- end -}}
 
-
-{{ range $i := IntRange 0 .Max }}
+{{ range $i := IntRange 0 .Max -}}
 func Test{{ FuncName $i }}(t *testing.T) {
 	t.Run("When does not have error", func(t *testing.T) {
 		{{ template "MockFatal" $i }}
@@ -48,6 +47,7 @@ func Test{{ FuncName $i }}(t *testing.T) {
 
 		{{ template "AssertNonFatal" $i }}
 	})
+
 	t.Run("When has error", func(t *testing.T) {
 		{{ template "MockFatal" $i }}
 
@@ -56,4 +56,5 @@ func Test{{ FuncName $i }}(t *testing.T) {
 		{{ template "AssertFatal" $i }}
 	})
 }
+
 {{ end}}
